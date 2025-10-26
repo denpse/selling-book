@@ -3,8 +3,8 @@ import { Request, Response } from "express";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 
-const generateToken = (userId: string): string => {
-  return jwt.sign({ userId }, process.env.JWT_SECRET!, {
+const generateToken = (userId: string, roles: string[]): string => {
+  return jwt.sign({ userId, roles }, process.env.JWT_SECRET!, {
     expiresIn: "7d",
   });
 };
@@ -32,7 +32,7 @@ export const registerService = async (req: Request, res: Response) => {
     });
     await newUser.save();
 
-    const token = generateToken(newUser._id);
+    const token = generateToken(newUser._id, newUser.roles);
 
     res.status(201).json({
       data: newUser,
@@ -58,7 +58,7 @@ export const LoginService = async (req: Request, res: Response) => {
     if (!isPasswordValid) {
       return res.status(400).json({ message: "Password not correct" });
     }
-    const token = generateToken(existEmail._id);
+    const token = generateToken(existEmail._id, existEmail.roles);
 
     res.status(200).json({
       data: existEmail,

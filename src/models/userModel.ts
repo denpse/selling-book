@@ -1,5 +1,5 @@
 import IUser from "@/types/userType";
-import mongoose, { Schema, Document } from "mongoose";
+import mongoose, { Schema } from "mongoose";
 
 const userSchema = new Schema<IUser>(
   {
@@ -32,9 +32,10 @@ const userSchema = new Schema<IUser>(
       required: true,
     },
     roles: {
-      type: String,
-      enum: ["admin", "user"],
-      default: "user",
+      type: [String],
+      enum: ["user", "admin"],
+      required: true,
+      default: ["user"],
     },
   },
   { timestamps: true }
