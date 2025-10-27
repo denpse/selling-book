@@ -32,9 +32,10 @@ const userSchema = new Schema<IUser>(
       required: true,
     },
     roles: {
-      type: String,
+      type: [String],
       enum: ["admin", "user"],
-      default: "user",
+      default: ["user"],
+      required: true,
     },
   },
   { timestamps: true }

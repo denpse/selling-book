@@ -8,7 +8,7 @@ export default interface IUser extends Document {
   password: string;
   phone: string;
   age: number;
-  roles: String;
+  roles: string[];
   createdAt: Date;
   updatedAt: Date;
 }
