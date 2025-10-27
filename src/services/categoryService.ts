@@ -1,5 +1,6 @@
 import categoryModel from "@/models/categoryModel";
 import { Request, Response } from "express";
+import mongoose from "mongoose";
 
 export const createCategoryService = async (req: Request, res: Response) => {
   try {
@@ -92,12 +93,17 @@ export const getCategoryService = async (req: Request, res: Response) => {
 
 export const deleteCategoryService = async (req: Request, res: Response) => {
   try {
-    const categoryId = req.params.id;
-    const existCategoryId = await categoryModel.findById({ _id: categoryId });
+    const id = req.params.id;
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res
+        .status(400)
+        .json({ success: false, message: "Invalid category ID" });
+    }
+    const existCategoryId = categoryModel.findById(id);
     if (!existCategoryId) {
       return res.status(401).json({ message: "Category not found" });
     }
-    await categoryModel.findByIdAndDelete({ _id: categoryId });
+    await categoryModel.findByIdAndDelete(id);
     res.status(200).json({
       message: "Deleted Successfully",
     });
